@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="description" content="Gerador de contratos de prestação de serviços de tecnologia - CSMM APPS">
+  <meta name="keywords" content="contrato, PDF, CSMM, tecnologia, serviços">
+  <meta name="author" content="CSMM APPS">
+  
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#667eea">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CSMM Contrato">
+  
+  <!-- iOS Safari Meta Tags -->
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="format-detection" content="telephone=no">
+  
+  <!-- Manifest -->
+  <link rel="manifest" href="/manifest.json">
+  
+  <!-- iOS Icons -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23667eea;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%23764ba2;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23f093fb;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='40' fill='url(%23grad)'/%3E%3Ctext x='90' y='120' font-size='90' text-anchor='middle' fill='white'%3E📄%3E%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23667eea;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%23764ba2;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23f093fb;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='192' height='192' rx='40' fill='url(%23grad)'/%3E%3Ctext x='96' y='130' font-size='100' text-anchor='middle' fill='white'%3E📄%3E%3C/text%3E%3C/svg%3E">
+  
+  <title>Gerador de Contrato - CSMM APPS</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      --accent-color: #667eea;
+      --text-dark: #1a1a2e;
+      --text-light: #6b7280;
+      --glass-bg: rgba(255, 255, 255, 0.25);
+      --glass-border: rgba(255, 255, 255, 0.18);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Partículas de fundo animadas */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+      animation: float 20s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      33% { transform: translateY(-30px) translateX(30px); }
+      66% { transform: translateY(30px) translateX(-30px); }
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 32px;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.5) inset,
+        0 0 100px rgba(102, 126, 234, 0.2);
+      max-width: 650px;
+      width: 100%;
+      padding: 50px 45px;
+      animation: slideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      z-index: 1;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 35px;
+      position: relative;
+    }
+
+    .logo-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: var(--primary-gradient);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+      animation: pulse 2s ease-in-out infinite;
+      position: relative;
+    }
+
+    .logo-icon::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 28px;
+      background: var(--primary-gradient);
+      opacity: 0.3;
+      filter: blur(12px);
+      z-index: -1;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
+    }
+
+    h1 {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      color: var(--text-light);
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    .info-box {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      border: 1px solid rgba(102, 126, 234, 0.2);
+      border-left: 4px solid var(--accent-color);
+      padding: 18px 20px;
+      border-radius: 16px;
+      margin-bottom: 30px;
+      font-size: 14px;
+      color: var(--text-dark);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+      animation: fadeIn 0.5s ease-out 0.2s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .info-box strong {
+      color: var(--accent-color);
+      font-weight: 700;
+    }
+
+    .form-group {
+      margin-bottom: 28px;
+      animation: fadeIn 0.5s ease-out both;
+    }
+
+    .form-group:nth-child(1) { animation-delay: 0.1s; }
+    .form-group:nth-child(2) { animation-delay: 0.2s; }
+    .form-group:nth-child(3) { animation-delay: 0.3s; }
+    .form-group:nth-child(4) { animation-delay: 0.4s; }
+    .form-group:nth-child(5) { animation-delay: 0.5s; }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.2px;
+      position: relative;
+      padding-left: 4px;
+    }
+
+    label::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 0;
+      background: var(--primary-gradient);
+      border-radius: 2px;
+      transition: height 0.3s ease;
+    }
+
+    .form-group:focus-within label::before {
+      height: 18px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid rgba(0, 0, 0, 0.08);
+      border-radius: 16px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      color: var(--text-dark);
+      font-family: 'Inter', sans-serif;
+    }
+
+    input::placeholder {
+      color: #9ca3af;
+      font-weight: 400;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 
+        0 0 0 4px rgba(102, 126, 234, 0.1),
+        0 8px 24px rgba(102, 126, 234, 0.15);
+      transform: translateY(-2px);
+    }
+
+    input.error, select.error {
+      border-color: #ef4444;
+      background: rgba(254, 242, 242, 0.8);
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23667eea' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 20px center;
+      padding-right: 50px;
+    }
+
+    .error-message {
+      color: #ef4444;
+      font-size: 12px;
+      margin-top: 8px;
+      display: none;
+      font-weight: 500;
+      padding-left: 4px;
+    }
+
+    .error-message.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .btn-gerar {
+      width: 100%;
+      padding: 18px 30px;
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-top: 15px;
+      box-shadow: 
+        0 10px 30px rgba(102, 126, 234, 0.4),
+        0 0 0 0 rgba(102, 126, 234, 0.5);
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      font-size: 15px;
+    }
+
+    .btn-gerar::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-gerar:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-gerar:hover {
+      transform: translateY(-3px);
+      box-shadow: 
+        0 15px 40px rgba(102, 126, 234, 0.5),
+        0 0 0 4px rgba(102, 126, 234, 0.2);
+    }
+
+    .btn-gerar:active {
+      transform: translateY(-1px);
+    }
+
+    .btn-gerar:disabled {
+      background: linear-gradient(135deg, #d1d5db 0%, #9ca3af 100%);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-gerar span {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Banner de instalação PWA */
+    .install-banner {
+      position: fixed;
+      bottom: -100px;
+      left: 0;
+      right: 0;
+      background: rgba(26, 26, 46, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 16px 20px;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      transition: bottom 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .install-banner.show {
+      bottom: 0;
+    }
+
+    .install-banner-content {
+      flex: 1;
+      color: white;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .install-banner-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .install-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .install-btn-primary {
+      background: var(--primary-gradient);
+      color: white;
+    }
+
+    .install-btn-secondary {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    .install-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Indicador offline */
+    .offline-indicator {
+      position: fixed;
+      top: -50px;
+      left: 0;
+      right: 0;
+      background: #ef4444;
+      color: white;
+      text-align: center;
+      padding: 12px;
+      font-weight: 600;
+      z-index: 1001;
+      transition: top 0.3s ease;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    .offline-indicator.show {
+      top: 0;
+    }
+
+    /* Melhorias de responsividade */
+    @media (max-width: 768px) {
+      .container {
+        padding: 35px 25px;
+        border-radius: 24px;
+        max-width: 100%;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      .logo-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 30px;
+      }
+
+      input, select {
+        padding: 14px 18px;
+        font-size: 14px;
+      }
+
+      .install-banner {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 20px;
+      }
+
+      .install-banner-actions {
+        flex-direction: column;
+      }
+
+      .install-btn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+
+      .container {
+        padding: 25px 20px;
+        border-radius: 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .subtitle {
+        font-size: 13px;
+      }
+
+      .logo-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 25px;
+        margin-bottom: 15px;
+      }
+
+      .info-box {
+        padding: 15px;
+        font-size: 13px;
+      }
+
+      .form-group {
+        margin-bottom: 22px;
+      }
+
+      label {
+        font-size: 13px;
+        margin-bottom: 8px;
+      }
+
+      input, select {
+        padding: 12px 16px;
+        font-size: 14px;
+        border-radius: 12px;
+      }
+
+      .btn-gerar {
+        padding: 16px 25px;
+        font-size: 14px;
+        border-radius: 12px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .container {
+        padding: 20px 15px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+    }
+
+    /* Suporte para modo paisagem em mobile */
+    @media (max-height: 600px) and (orientation: landscape) {
+      .container {
+        padding: 25px 35px;
+      }
+
+      .header {
+        margin-bottom: 20px;
+      }
+
+      .logo-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 25px;
+        margin-bottom: 10px;
+      }
+
+      h1 {
+        font-size: 24px;
+        margin-bottom: 5px;
+      }
+
+      .form-group {
+        margin-bottom: 18px;
+      }
+    }
+
+    /* Safe area para iPhone X e superiores */
+    @supports (padding: max(0px)) {
+      body {
+        padding-left: max(20px, env(safe-area-inset-left));
+        padding-right: max(20px, env(safe-area-inset-right));
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+      }
+
+      .install-banner {
+        padding-bottom: max(16px, env(safe-area-inset-bottom));
+      }
+    }
+
+    /* Efeito de brilho nos inputs */
+    input:focus, select:focus {
+      position: relative;
+    }
+
+    input:focus::after, select:focus::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: shine 1.5s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo-icon">📄</div>
+      <h1>Gerador de Contrato</h1>
+      <p class="subtitle">CSMM APPS • Prestação de Serviços de Tecnologia</p>
+    </div>
+
+    <div class="info-box">
+      <strong>ℹ️ Informação:</strong> Preencha os campos abaixo para gerar o contrato em PDF. 
+      Os campos marcados com * são obrigatórios.
+    </div>
+
+    <form id="formContrato" onsubmit="gerarContrato(event)">
+      <div class="form-group">
+        <label for="nome">Nome/Razão Social *</label>
+        <input 
+          type="text" 
+          id="nome" 
+          name="nome" 
+          placeholder="Digite o nome completo ou razão social"
+          required
+        >
+        <span class="error-message" id="nome-error">Por favor, preencha o nome.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="cpf">CPF/CNPJ *</label>
+        <input 
+          type="text" 
+          id="cpf" 
+          name="cpf" 
+          placeholder="000.000.000-00 ou 00.000.000/0000-00"
+          required
+          maxlength="18"
+        >
+        <span class="error-message" id="cpf-error">Por favor, preencha um CPF ou CNPJ válido.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="valor">Valor do Contrato (R$) *</label>
+        <input 
+          type="text" 
+          id="valor" 
+          name="valor" 
+          placeholder="0,00"
+          required
+        >
+        <span class="error-message" id="valor-error">Por favor, preencha um valor válido.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="prazo">Prazo do Contrato (anos) *</label>
+        <select id="prazo" name="prazo" required>
+          <option value="">Selecione o prazo</option>
+          <option value="1">1 ano</option>
+          <option value="2">2 anos</option>
+          <option value="3">3 anos</option>
+          <option value="4">4 anos</option>
+          <option value="5">5 anos</option>
+        </select>
+        <span class="error-message" id="prazo-error">Por favor, selecione o prazo.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="whats">WhatsApp (opcional)</label>
+        <input 
+          type="text" 
+          id="whats" 
+          name="whats" 
+          placeholder="5511999999999 (apenas números)"
+          maxlength="15"
+        >
+        <span class="error-message" id="whats-error">Formato inválido. Use apenas números com DDD.</span>
+      </div>
+
+      <button type="submit" class="btn-gerar" id="btnGerar">
+        <span>🚀 Gerar Contrato em PDF</span>
+      </button>
+    </form>
+  </div>
+
+  <!-- Banner de instalação PWA -->
+  <div class="install-banner" id="installBanner">
+    <div class="install-banner-content">
+      📱 Instale o app para acesso rápido e offline
+    </div>
+    <div class="install-banner-actions">
+      <button class="install-btn install-btn-primary" id="installBtn">Instalar</button>
+      <button class="install-btn install-btn-secondary" id="dismissBtn">Agora não</button>
+    </div>
+  </div>
+
+  <!-- Indicador offline -->
+  <div class="offline-indicator" id="offlineIndicator">
+    ⚠️ Você está offline. Algumas funcionalidades podem estar limitadas.
+  </div>
+
+  <script>
+    // Registro do Service Worker para PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => {
+            console.log('✅ Service Worker registrado com sucesso:', registration.scope);
+            
+            // Verificar atualizações periodicamente
+            setInterval(() => {
+              registration.update();
+            }, 60000); // A cada minuto
+          })
+          .catch((error) => {
+            console.log('❌ Erro ao registrar Service Worker:', error);
+          });
+
+        // Escutar mensagens do service worker
+        navigator.serviceWorker.addEventListener('message', (event) => {
+          console.log('Mensagem do Service Worker:', event.data);
+        });
+      });
+    }
+
+    // Detectar status offline/online
+    window.addEventListener('online', () => {
+      const indicator = document.getElementById('offlineIndicator');
+      if (indicator) {
+        indicator.classList.remove('show');
+      }
+      console.log('✅ Conexão restaurada');
+    });
+
+    window.addEventListener('offline', () => {
+      const indicator = document.getElementById('offlineIndicator');
+      if (indicator) {
+        indicator.classList.add('show');
+      }
+      console.log('⚠️ Modo offline ativado');
+    });
+
+    // Verificar status inicial
+    if (!navigator.onLine) {
+      const indicator = document.getElementById('offlineIndicator');
+      if (indicator) {
+        indicator.classList.add('show');
+      }
+    }
+
+    // Gerenciar banner de instalação PWA
+    let deferredPrompt;
+    const installBanner = document.getElementById('installBanner');
+    const installBtn = document.getElementById('installBtn');
+    const dismissBtn = document.getElementById('dismissBtn');
+
+    // Verificar se já foi instalado ou se o banner foi dispensado
+    const bannerDismissed = localStorage.getItem('pwa-banner-dismissed');
+    const isInstalled = window.matchMedia('(display-mode: standalone)').matches || 
+                       window.navigator.standalone || 
+                       document.referrer.includes('android-app://');
+
+    if (bannerDismissed === 'true' || isInstalled) {
+      if (installBanner) installBanner.style.display = 'none';
+    }
+
+    // Evento beforeinstallprompt (Chrome, Edge, etc)
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      
+      // Mostrar banner após 3 segundos
+      if (!bannerDismissed && !isInstalled && installBanner) {
+        setTimeout(() => {
+          installBanner.classList.add('show');
+        }, 3000);
+      }
+    });
+
+    // Botão de instalação
+    if (installBtn) {
+      installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          console.log(`Resultado da instalação: ${outcome}`);
+          deferredPrompt = null;
+          if (installBanner) installBanner.classList.remove('show');
+        } else {
+          // Para iOS Safari, mostrar instruções
+          if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+            alert('Para instalar no iPhone/iPad:\n\n1. Toque no botão de compartilhar (quadrado com seta)\n2. Selecione "Adicionar à Tela de Início"\n3. Confirme a instalação');
+          } else {
+            alert('Instalação não disponível no momento. Tente novamente mais tarde.');
+          }
+        }
+      });
+    }
+
+    // Botão de dispensar
+    if (dismissBtn) {
+      dismissBtn.addEventListener('click', () => {
+        if (installBanner) {
+          installBanner.classList.remove('show');
+          localStorage.setItem('pwa-banner-dismissed', 'true');
+        }
+      });
+    }
+
+    // Detectar instalação (appinstalled event)
+    window.addEventListener('appinstalled', () => {
+      console.log('✅ PWA instalado com sucesso!');
+      if (installBanner) installBanner.classList.remove('show');
+      deferredPrompt = null;
+    });
+    // Função para formatar CPF/CNPJ
+    function formatarCPFCNPJ(valor) {
+      valor = valor.replace(/\D/g, '');
+      
+      if (valor.length <= 11) {
+        // CPF: 000.000.000-00
+        valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+        valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+        valor = valor.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      } else {
+        // CNPJ: 00.000.000/0000-00
+        valor = valor.replace(/^(\d{2})(\d)/, '$1.$2');
+        valor = valor.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+        valor = valor.replace(/\.(\d{3})(\d)/, '.$1/$2');
+        valor = valor.replace(/(\d{4})(\d)/, '$1-$2');
+      }
+      
+      return valor;
+    }
+
+    // Função para formatar valor monetário
+    function formatarValor(valor) {
+      valor = valor.replace(/\D/g, '');
+      valor = (valor / 100).toFixed(2) + '';
+      valor = valor.replace('.', ',');
+      valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      return valor;
+    }
+
+    // Aplicar máscaras nos campos
+    document.getElementById('cpf').addEventListener('input', function(e) {
+      e.target.value = formatarCPFCNPJ(e.target.value);
+    });
+
+    document.getElementById('valor').addEventListener('input', function(e) {
+      e.target.value = formatarValor(e.target.value);
+    });
+
+    document.getElementById('whats').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+    // Função para converter número por extenso
+    function numeroPorExtenso(numero) {
+      const unidades = ['', 'um', 'dois', 'três', 'quatro', 'cinco'];
+      return unidades[numero] || numero;
+    }
+
+    // Função para formatar data em DD/MM/AAAA
+    function formatarData(data) {
+      const dia = String(data.getDate()).padStart(2, '0');
+      const mes = String(data.getMonth() + 1).padStart(2, '0');
+      const ano = data.getFullYear();
+      return `${dia}/${mes}/${ano}`;
+    }
+
+    // Função para obter mês por extenso em português
+    function mesPorExtenso(data) {
+      const meses = [
+        'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+        'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+      ];
+      return meses[data.getMonth()];
+    }
+
+    // Função para formatar data completa por extenso
+    function dataPorExtenso(data) {
+      const dia = data.getDate();
+      const mes = mesPorExtenso(data);
+      const ano = data.getFullYear();
+      return `${dia} de ${mes} de ${ano}`;
+    }
+
+    // Função para calcular data de término do contrato
+    function calcularDataTermino(dataInicio, prazoAnos) {
+      const dataTermino = new Date(dataInicio);
+      dataTermino.setFullYear(dataTermino.getFullYear() + parseInt(prazoAnos));
+      return dataTermino;
+    }
+
+    // Função para validar formulário
+    function validarFormulario() {
+      let valido = true;
+      
+      const nome = document.getElementById('nome').value.trim();
+      const cpf = document.getElementById('cpf').value.trim();
+      const valor = document.getElementById('valor').value.trim();
+      const prazo = document.getElementById('prazo').value;
+
+      // Validar nome
+      if (!nome) {
+        mostrarErro('nome-error');
+        document.getElementById('nome').classList.add('error');
+        valido = false;
+      } else {
+        ocultarErro('nome-error');
+        document.getElementById('nome').classList.remove('error');
+      }
+
+      // Validar CPF/CNPJ
+      const cpfLimpo = cpf.replace(/\D/g, '');
+      if (!cpf || (cpfLimpo.length !== 11 && cpfLimpo.length !== 14)) {
+        mostrarErro('cpf-error');
+        document.getElementById('cpf').classList.add('error');
+        valido = false;
+      } else {
+        ocultarErro('cpf-error');
+        document.getElementById('cpf').classList.remove('error');
+      }
+
+      // Validar valor
+      const valorLimpo = valor.replace(/\D/g, '');
+      if (!valor || valorLimpo === '0' || valorLimpo === '00') {
+        mostrarErro('valor-error');
+        document.getElementById('valor').classList.add('error');
+        valido = false;
+      } else {
+        ocultarErro('valor-error');
+        document.getElementById('valor').classList.remove('error');
+      }
+
+      // Validar prazo
+      if (!prazo) {
+        mostrarErro('prazo-error');
+        document.getElementById('prazo').classList.add('error');
+        valido = false;
+      } else {
+        ocultarErro('prazo-error');
+        document.getElementById('prazo').classList.remove('error');
+      }
+
+      return valido;
+    }
+
+    function mostrarErro(id) {
+      document.getElementById(id).classList.add('show');
+    }
+
+    function ocultarErro(id) {
+      document.getElementById(id).classList.remove('show');
+    }
+
+    // Função principal para gerar contrato
+    function gerarContrato(event) {
+      event.preventDefault();
+
+      if (!validarFormulario()) {
+        return;
+      }
+
+      const btnGerar = document.getElementById('btnGerar');
+      btnGerar.disabled = true;
+      btnGerar.querySelector('span').textContent = '⏳ Gerando PDF...';
+
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF("p", "mm", "a4");
+
+        const nome = document.getElementById("nome").value.trim();
+        const cpf = document.getElementById("cpf").value.trim();
+        const valorInput = document.getElementById("valor").value.trim();
+        const prazo = document.getElementById("prazo").value;
+        const whats = document.getElementById("whats").value.replace(/\D/g, '');
+
+        // Converter valor para formato numérico
+        const valorFormatado = valorInput.replace(/\./g, '').replace(',', '.');
+
+        // Converter prazo por extenso
+        const prazoExtenso = numeroPorExtenso(parseInt(prazo));
+
+        // Cores do PDF
+        const corPrimaria = [102, 126, 234]; // #667eea
+        const corSecundaria = [118, 75, 162]; // #764ba2
+        const corTexto = [26, 26, 46]; // #1a1a2e
+        const corTextoClaro = [107, 114, 128]; // #6b7280
+
+        // Cabeçalho do PDF com gradiente
+        doc.setFillColor(corPrimaria[0], corPrimaria[1], corPrimaria[2]);
+        doc.rect(0, 0, 210, 40, 'F');
+        
+        // Gradiente no cabeçalho (simulado com retângulos)
+        doc.setFillColor(corSecundaria[0], corSecundaria[1], corSecundaria[2]);
+        doc.rect(0, 0, 210, 20, 'F');
+
+        // Logo/Ícone no cabeçalho
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(24);
+        doc.setFont("helvetica", "bold");
+        doc.text("CSMM APPS", 20, 15);
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.text("Contrato de Prestação de Serviços de Tecnologia", 20, 25);
+
+        // Linha decorativa
+        doc.setDrawColor(255, 255, 255);
+        doc.setLineWidth(0.5);
+        doc.line(20, 30, 190, 30);
+
+        // Conteúdo do contrato
+        let y = 50;
+    const margemEsquerda = 20;
+    const larguraTexto = 170;
+        const margemDireita = 190;
+
+        // Título principal
+        doc.setTextColor(corPrimaria[0], corPrimaria[1], corPrimaria[2]);
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text("CONTRATO DE PRESTAÇÃO DE SERVIÇOS", margemEsquerda, y);
+        y += 8;
+
+        // Seção CONTRATADA
+        doc.setTextColor(corTexto[0], corTexto[1], corTexto[2]);
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
+        doc.text("CONTRATADA:", margemEsquerda, y);
+        y += 6;
+        
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(11);
+        const contratada = "CSMM APPS, empresa de tecnologia, representada por José Claudio da Silva, CPF nº 053.751.474-08, residente à Rua Hugo Capeto, nº 149, Francisco Morato – SP.";
+        const linhasContratada = doc.splitTextToSize(contratada, larguraTexto);
+        linhasContratada.forEach(linha => {
+          doc.text(linha, margemEsquerda, y);
+          y += 6;
+        });
+        y += 4;
+
+        // Seção CONTRATANTE
+        doc.setFont("helvetica", "bold");
+        doc.text("CONTRATANTE:", margemEsquerda, y);
+        y += 6;
+        
+        doc.setFont("helvetica", "normal");
+        doc.text(`Nome/Razão Social: ${nome}`, margemEsquerda, y);
+        y += 6;
+        doc.text(`CPF/CNPJ: ${cpf}`, margemEsquerda, y);
+        y += 6;
+        doc.text("Endereço: _________________________________________________", margemEsquerda, y);
+        y += 10;
+
+        // Linha divisória
+        doc.setDrawColor(corPrimaria[0], corPrimaria[1], corPrimaria[2]);
+        doc.setLineWidth(0.5);
+        doc.line(margemEsquerda, y, margemDireita, y);
+        y += 8;
+
+        // Cláusulas
+        const clausulas = [
+          {
+            titulo: "CLÁUSULA 1ª – DO OBJETO",
+            texto: "Prestação de serviços de tecnologia, incluindo, mas não se limitando a:\n\n• Desenvolvimento de sistemas e aplicativos\n• Criação de sites e sistemas web\n• Automação de processos\n• Manutenção e suporte técnico\n• Soluções digitais personalizadas"
+          },
+          {
+            titulo: "CLÁUSULA 2ª – DO PRAZO",
+            texto: (() => {
+              const dataAtual = new Date();
+              const dataInicio = formatarData(dataAtual);
+              const dataTermino = formatarData(calcularDataTermino(dataAtual, prazo));
+              return `O presente contrato terá duração de ${prazo} (${prazoExtenso}) ano(s), iniciando-se em ${dataInicio} e encerrando-se em ${dataTermino}, podendo o prazo ser ajustado para 1, 2, 3, 4 ou 5 anos.`;
+            })()
+          },
+          {
+            titulo: "CLÁUSULA 3ª – DO VALOR",
+            texto: `O valor dos serviços será de R$ ${valorInput}, conforme acordo entre as partes.`
+          },
+          {
+            titulo: "CLÁUSULA 4ª – DA MULTA POR RESCISÃO",
+            texto: "Em caso de quebra de contrato antes do prazo final, por iniciativa de qualquer das partes, será aplicada multa rescisória no valor de R$ 10.000,00 (dez mil reais), independentemente de aviso prévio, salvo acordo formal entre as partes."
+          },
+          {
+            titulo: "CLÁUSULA 5ª – DAS OBRIGAÇÕES DA CONTRATADA",
+            texto: "• Executar os serviços com qualidade técnica e profissional\n• Cumprir os prazos acordados\n• Manter sigilo absoluto das informações do CONTRATANTE"
+          },
+          {
+            titulo: "CLÁUSULA 6ª – DAS OBRIGAÇÕES DO CONTRATANTE",
+            texto: "• Fornecer informações necessárias para execução dos serviços\n• Efetuar os pagamentos conforme acordado\n• Respeitar limites técnicos do serviço contratado"
+          },
+          {
+            titulo: "CLÁUSULA 7ª – DO FORO",
+            texto: "Fica eleito o foro da comarca de Francisco Morato – SP, para dirimir quaisquer questões oriundas deste contrato."
+          }
+        ];
+
+        clausulas.forEach((clausula, index) => {
+          if (y > 260) {
+            doc.addPage();
+            y = 20;
+          }
+
+          // Título da cláusula com cor
+          doc.setTextColor(corPrimaria[0], corPrimaria[1], corPrimaria[2]);
+          doc.setFontSize(11);
+          doc.setFont("helvetica", "bold");
+          doc.text(clausula.titulo, margemEsquerda, y);
+          y += 6;
+
+          // Texto da cláusula
+          doc.setTextColor(corTexto[0], corTexto[1], corTexto[2]);
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(10);
+          const linhas = doc.splitTextToSize(clausula.texto, larguraTexto);
+    linhas.forEach(linha => {
+      if (y > 280) {
+        doc.addPage();
+        y = 20;
+      }
+      doc.text(linha, margemEsquerda, y);
+            y += 5;
+          });
+          y += 4;
+        });
+
+        // Rodapé com assinaturas
+        if (y > 200) {
+          doc.addPage();
+          y = 20;
+        }
+
+        y += 10;
+        doc.setDrawColor(corPrimaria[0], corPrimaria[1], corPrimaria[2]);
+        doc.line(margemEsquerda, y, margemDireita, y);
+        y += 8;
+
+        doc.setTextColor(corTextoClaro[0], corTextoClaro[1], corTextoClaro[2]);
+        doc.setFontSize(10);
+        const dataAtual = new Date();
+        const dataCompleta = dataPorExtenso(dataAtual);
+        doc.text(`Francisco Morato – SP, ${dataCompleta}`, margemEsquerda, y);
+        y += 15;
+
+        // Assinatura CONTRATADA
+        doc.setTextColor(corPrimaria[0], corPrimaria[1], corPrimaria[2]);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.text("CONTRATADA:", margemEsquerda, y);
+        y += 6;
+        doc.setTextColor(corTexto[0], corTexto[1], corTexto[2]);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text("José Claudio da Silva", margemEsquerda, y);
+        y += 5;
+        doc.text("CPF: 053.751.474-08", margemEsquerda, y);
+        y += 8;
+        doc.text("Assinatura: _________________________________", margemEsquerda, y);
+        y += 20;
+
+        // Assinatura CONTRATANTE
+        doc.setTextColor(corPrimaria[0], corPrimaria[1], corPrimaria[2]);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.text("CONTRATANTE:", margemEsquerda, y);
+        y += 6;
+        doc.setTextColor(corTexto[0], corTexto[1], corTexto[2]);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text(`Nome: ${nome}`, margemEsquerda, y);
+        y += 8;
+        doc.text("Assinatura: _________________________________", margemEsquerda, y);
+
+        // Rodapé em todas as páginas
+        const totalPages = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= totalPages; i++) {
+          doc.setPage(i);
+          doc.setTextColor(corTextoClaro[0], corTextoClaro[1], corTextoClaro[2]);
+          doc.setFontSize(8);
+          doc.setFont("helvetica", "normal");
+          doc.text(
+            `Página ${i} de ${totalPages} - CSMM APPS - Contrato de Prestação de Serviços`,
+            105,
+            287,
+            { align: 'center' }
+          );
+        }
+
+        const nomeArquivo = `Contrato_CSMMapps_${nome.replace(/\s+/g, '_')}.pdf`;
+        doc.save(nomeArquivo);
+
+        // Abrir WhatsApp se fornecido
+    if (whats) {
+          const mensagem = encodeURIComponent(`Olá! Segue o contrato CSMMapps em PDF para assinatura.`);
+          setTimeout(() => {
+            window.open(`https://wa.me/${whats}?text=${mensagem}`, '_blank');
+          }, 500);
+        }
+
+        // Resetar botão
+        setTimeout(() => {
+          btnGerar.disabled = false;
+          btnGerar.querySelector('span').textContent = '🚀 Gerar Contrato em PDF';
+          
+          // Mostrar mensagem de sucesso
+          alert('✅ Contrato gerado com sucesso!');
+        }, 1000);
+
+      } catch (error) {
+        console.error('Erro ao gerar contrato:', error);
+        alert('❌ Erro ao gerar o contrato. Por favor, verifique se todos os campos estão preenchidos corretamente.');
+        btnGerar.disabled = false;
+        btnGerar.querySelector('span').textContent = '🚀 Gerar Contrato em PDF';
+    }
+  }
+  </script>
+</body>
+</html>
